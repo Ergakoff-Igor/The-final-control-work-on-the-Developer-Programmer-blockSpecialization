@@ -241,15 +241,411 @@ __*[Файл .dravio](Diagram\DiagramAnimals.drawio)*__
 ### Часть 3. Работа с MySQL
 7. В подключенном MySQL репозитории создать базу данных “Друзья
 человека”
+
+Для решения задания будем использовать ранее установленный контейнер MySQL.
+
+* Для этого устанавливаем образ последней версии MySQL с официального сайта https://hub.docker.com/_/mysql при помощи команды: 
+```sh
+igor@igor-linux:~$ sudo docker run -h $HOSTNAME --name test-mysql -e MYSQL_ROOT_PASSWORD=123 -d mysql:latest
+```
+* Заходим в контейнер test-mysql
+```sh
+igor@igor-linux:~$ sudo docker exec -it test-mysql bash
+mysql -u root -p
+```
+* Добавляем базу данных
+```sql
+CREATE SCHEMA friends_of_man;
+```
+* Проверяем
+```sql
+SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| friends_of_man     |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+```
+
 8. Создать таблицы с иерархией из диаграммы в БД
+* Заходим в базу данных __*friends_of_man*__
+```sql
+USE friends_of_man;
+```
+* Создаем таблицу __*animals*__
+```sql
+DROP TABLE IF EXISTS animals;
+CREATE TABLE animals (
+	Id INT AUTO_INCREMENT PRIMARY KEY, 
+	Class_name VARCHAR(20));
+```
+* Заполняем таблицу __*animals*__
+```sql
+INSERT INTO animals (Class_name) VALUES ('Pack_animals'),('Pets');  
+SELECT * FROM animals;
++----+--------------+
+| Id | Class_name   |
++----+--------------+
+|  1 | Pack_animals |
+|  2 | Pets         |
++----+--------------+
+```
+* Создаем таблицу __*pets*__
+```sql
+DROP TABLE IF EXISTS pets;
+CREATE TABLE pets(
+	Id INT AUTO_INCREMENT PRIMARY KEY,
+    Genus_name VARCHAR (20),
+    Class_id INT,
+    FOREIGN KEY (Class_id) REFERENCES animals (Id) ON DELETE CASCADE ON UPDATE CASCADE);
+
+```
+* Заполняем таблицу __*pets*__
+```sql
+INSERT INTO pets (Genus_name, Class_id) VALUES 
+	('Cats', 2),
+	('Dogs', 2),  
+	('Hamsters', 2);  
+SELECT * FROM pets;
++----+------------+----------+
+| Id | Genus_name | Class_id |
++----+------------+----------+
+|  1 | Cats       |        2 |
+|  2 | Dogs       |        2 |
+|  3 | Hamsters   |        2 |
++----+------------+----------+
+```
+* Создаем таблицу __*pack_animals*__
+```sql
+DROP TABLE IF EXISTS pack_animals;
+CREATE TABLE pack_animals
+(
+	Id INT AUTO_INCREMENT PRIMARY KEY,
+    Genus_name VARCHAR (20),
+    Class_id INT,
+    FOREIGN KEY (Class_id) REFERENCES animals (Id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+```
+* Заполняем таблицу __*pack_animals*__
+```sql
+INSERT INTO pack_animals (Genus_name, Class_id) VALUES 
+  ('Horses', 1),
+  ('Donkeys', 1),  
+  ('Camels', 1);  
+SELECT * FROM pack_animals;
++----+------------+----------+
+| Id | Genus_name | Class_id |
++----+------------+----------+
+|  1 | Horses     |        1 |
+|  2 | Donkeys    |        1 |
+|  3 | Camels     |        1 |
++----+------------+----------+
+```
+* Создаем таблицу __*pack_animals*__
+```sql
+CREATE TABLE cats (
+	Id INT AUTO_INCREMENT PRIMARY KEY, 
+  Name VARCHAR(20), 
+  Birthday DATE,
+  Commands VARCHAR(50),
+  Genus_id int,
+  Foreign KEY (Genus_id) REFERENCES pets (Id) ON DELETE CASCADE ON UPDATE CASCADE);
+```
+* Создаем таблицу __*pack_animals*__
+```sql
+CREATE TABLE cats (
+	Id INT AUTO_INCREMENT PRIMARY KEY, 
+  Name VARCHAR(20), 
+  Birthday DATE,
+  Commands VARCHAR(50),
+  Genus_id int,
+  Foreign KEY (Genus_id) REFERENCES pets (Id) ON DELETE CASCADE ON UPDATE CASCADE);
+```
+* Создаем таблицу __*dogs*__
+```sql
+CREATE TABLE dogs (
+	Id INT AUTO_INCREMENT PRIMARY KEY, 
+  Name VARCHAR(20), 
+  Birthday DATE,
+  Commands VARCHAR(50),
+  Genus_id int,
+  Foreign KEY (Genus_id) REFERENCES pets (Id) ON DELETE CASCADE ON UPDATE CASCADE);
+```
+* Создаем таблицу __*hamsters*__
+```sql
+CREATE TABLE hamsters (
+	Id INT AUTO_INCREMENT PRIMARY KEY, 
+  Name VARCHAR(20), 
+  Birthday DATE,
+  Commands VARCHAR(50),
+  Genus_id int,
+  Foreign KEY (Genus_id) REFERENCES pets (Id) ON DELETE CASCADE ON UPDATE CASCADE);
+```
+* Создаем таблицу __*horses*__
+```sql
+CREATE TABLE horses (
+	Id INT AUTO_INCREMENT PRIMARY KEY, 
+  Name VARCHAR(20), 
+  Birthday DATE,
+  Commands VARCHAR(50),
+  Genus_id int,
+  Foreign KEY (Genus_id) REFERENCES pets (Id) ON DELETE CASCADE ON UPDATE CASCADE);
+```
+* Создаем таблицу __*camels*__
+```sql
+CREATE TABLE camels (
+	Id INT AUTO_INCREMENT PRIMARY KEY, 
+  Name VARCHAR(20), 
+  Birthday DATE,
+  Commands VARCHAR(50),
+  Genus_id int,
+  Foreign KEY (Genus_id) REFERENCES pets (Id) ON DELETE CASCADE ON UPDATE CASCADE);
+```
+* Создаем таблицу __*donkeys*__
+```sql
+CREATE TABLE donkeys (
+	Id INT AUTO_INCREMENT PRIMARY KEY, 
+  Name VARCHAR(20), 
+  Birthday DATE,
+  Commands VARCHAR(50),
+  Genus_id int,
+  Foreign KEY (Genus_id) REFERENCES pets (Id) ON DELETE CASCADE ON UPDATE CASCADE);
+```
+
+* Проверяем
+```sql
+SHOW TABLES;
++--------------------------+
+| Tables_in_friends_of_man |
++--------------------------+
+| animals                  |
+| camels                   |
+| cats                     |
+| dogs                     |
+| donkeys                  |
+| hamsters                 |
+| horses                   |
+| pack_animals             |
+| pets                     |
++--------------------------+
+```
 9. Заполнить низкоуровневые таблицы именами(животных), командами
 которые они выполняют и датами рождения
+* Заполняем таблицу __*cats*__
+```sql
+INSERT INTO cats (Name, Birthday, Commands, Genus_id) VALUES 
+	('Kaktus', '2011-01-01', 'ks-ks-ks', 1),
+	('Tapok', '2016-01-01', "foo", 1),  
+	('Shnyr', '2017-01-01', "go", 1);   
+SELECT * FROM cats;
++----+--------+------------+----------+----------+
+| Id | Name   | Birthday   | Commands | Genus_id |
++----+--------+------------+----------+----------+
+|  1 | Kaktus | 2011-01-01 | ks-ks-ks |        1 |
+|  2 | Tapok  | 2016-01-01 | foo      |        1 |
+|  3 | Shnyr  | 2017-01-01 | go       |        1 |
++----+--------+------------+----------+----------+
+```
+* Заполняем таблицу __*dogs*__
+```sql
+INSERT INTO dogs (Name, Birthday, Commands, Genus_id) VALUES 
+	('Layka', '2020-01-01', 'ko mne, lezhat, lapu, golos', 2),
+	('Sucha', '2022-06-12', "sidet, lezhat, lapu", 2),  
+	('New', '2019-03-01', "sidet, lezhat, lapu, sled, fas", 2), 
+	('Zuza', '2020-05-10', "sidet, lezhat, foo, mesto", 2);
+SELECT * FROM dogs;
++----+-------+------------+--------------------------------+----------+
+| Id | Name  | Birthday   | Commands                       | Genus_id |
++----+-------+------------+--------------------------------+----------+
+|  1 | Layka | 2020-01-01 | ko mne, lezhat, lapu, golos    |        2 |
+|  2 | Sucha | 2022-06-12 | sidet, lezhat, lapu            |        2 |
+|  3 | New   | 2019-03-01 | sidet, lezhat, lapu, sled, fas |        2 |
+|  4 | Zuza  | 2020-05-10 | sidet, lezhat, foo, mesto      |        2 |
++----+-------+------------+--------------------------------+----------+
+```
+* Заполняем таблицу __*hamsters*__
+```sql
+INSERT INTO hamsters (Name, Birthday, Commands, Genus_id) VALUES 
+	('First', '2020-10-12', '', 3),
+	('Second', '2021-03-12', "fight", 3),  
+	('Thirt', '2022-07-11', NULL, 3), 
+	('Null', '2022-05-10', NULL, 3);
+SELECT * FROM hamsters;
++----+--------+------------+----------+----------+
+| Id | Name   | Birthday   | Commands | Genus_id |
++----+--------+------------+----------+----------+
+|  1 | First  | 2020-10-12 |          |        3 |
+|  2 | Second | 2021-03-12 | fight    |        3 |
+|  3 | Thirt  | 2022-07-11 | NULL     |        3 |
+|  4 | Null   | 2022-05-10 | NULL     |        3 |
++----+--------+------------+----------+----------+
+```
+* Заполняем таблицу __*horses*__
+```sql
+INSERT INTO horses (Name, Birthday, Commands, Genus_id) VALUES 
+	('Kapusta', '2020-01-12', 'go', 1),
+	('Mouse', '2017-03-12', "go, stop, jump", 1),  
+	('Aurus', '2016-07-12', "go, stop, jump, none", 1), 
+	('Marka', '2020-11-10', "go, stop, jump", 1);
+SELECT * FROM horses;
++----+---------+------------+----------------------+----------+
+| Id | Name    | Birthday   | Commands             | Genus_id |
++----+---------+------------+----------------------+----------+
+|  1 | Kapusta | 2020-01-12 | go                   |        1 |
+|  2 | Mouse   | 2017-03-12 | go, stop, jump       |        1 |
+|  3 | Aurus   | 2016-07-12 | go, stop, jump, none |        1 |
+|  4 | Marka   | 2020-11-10 | go, stop, jump       |        1 |
++----+---------+------------+----------------------+----------+
+```
+* Заполняем таблицу __*donkeys*__
+```sql
+INSERT INTO donkeys (Name, Birthday, Commands, Genus_id) VALUES 
+	('Silny', '2019-04-10', "GO", 2),
+	('Smely', '2020-03-12', "GO", 2),  
+	('Gordy', '2021-07-12', "GO", 2), 
+	('Spely', '2022-12-10', "GO", 2);
+SELECT * FROM donkeys;
++----+-------+------------+----------+----------+
+| Id | Name  | Birthday   | Commands | Genus_id |
++----+-------+------------+----------+----------+
+|  1 | Silny | 2019-04-10 | GO       |        2 |
+|  2 | Smely | 2020-03-12 | GO       |        2 |
+|  3 | Gordy | 2021-07-12 | GO       |        2 |
+|  4 | Spely | 2022-12-10 | GO       |        2 |
++----+-------+------------+----------+----------+
+```
+* Заполняем таблицу __*camels*__
+```sql
+INSERT INTO camels (Name, Birthday, Commands, Genus_id) VALUES 
+	('Malysh', '2022-04-10', 'jump', 3),
+	('Gorbach', '2019-03-12', "GO", 3),  
+	('Silach', '2015-07-12', "stop", 3), 
+	('Bol', '2022-12-10', "top", 3);
+SELECT * FROM camels;
++----+---------+------------+----------+----------+
+| Id | Name    | Birthday   | Commands | Genus_id |
++----+---------+------------+----------+----------+
+|  1 | Malysh  | 2022-04-10 | jump     |        3 |
+|  2 | Gorbach | 2019-03-12 | GO       |        3 |
+|  3 | Silach  | 2015-07-12 | stop     |        3 |
+|  4 | Bol     | 2022-12-10 | top      |        3 |
++----+---------+------------+----------+----------+
+```
 10. Удалив из таблицы верблюдов, т.к. верблюдов решили перевезти в другой питомник на зимовку. Объединить таблицы лошади, и ослы в одну таблицу.
+* Очищаем таблицу с верблюдами
+```sql
+SET SQL_SAFE_UPDATES = 0;
+DELETE FROM camels;
+SELECT * FROM camels;
+Empty set (0.00 sec)
+```
+* Объединяем таблицы лошади, и ослы в одну таблицу
+```sql
+SELECT * FROM horses
+UNION
+SELECT * FROM donkeys;
++----+---------+------------+----------------------+----------+
+| Id | Name    | Birthday   | Commands             | Genus_id |
++----+---------+------------+----------------------+----------+
+|  1 | Kapusta | 2020-01-12 | go                   |        1 |
+|  2 | Mouse   | 2017-03-12 | go, stop, jump       |        1 |
+|  3 | Aurus   | 2016-07-12 | go, stop, jump, none |        1 |
+|  4 | Marka   | 2020-11-10 | go, stop, jump       |        1 |
+|  1 | Silny   | 2019-04-10 | GO                   |        2 |
+|  2 | Smely   | 2020-03-12 | GO                   |        2 |
+|  3 | Gordy   | 2021-07-12 | GO                   |        2 |
+|  4 | Spely   | 2022-12-10 | GO                   |        2 |
++----+---------+------------+----------------------+----------+
+```
 11. Создать новую таблицу “молодые животные” в которую попадут все животные старше 1 года, но младше 3 лет и в отдельном столбце с точностью до месяца подсчитать возраст животных в новой таблице
+```sql
+CREATE VIEW all_animals AS
+SELECT * FROM horses
+UNION
+SELECT * FROM donkeys
+UNION
+SELECT * FROM dogs
+UNION
+SELECT * FROM cats
+UNION
+SELECT * FROM hamsters;
+
+DROP TABLE IF EXISTS young_animals;
+CREATE TABLE young_animals
+SELECT Id, Name, Birthday, Commands, Genus_id, TIMESTAMPDIFF(MONTH, Birthday, CURDATE()) AS Age_in_monthss
+FROM all_animals
+WHERE Birthday BETWEEN ADDDATE(curdate(), INTERVAL -3 YEAR) AND ADDDATE(CURDATE(), INTERVAL -1 YEAR);
+SELECT * FROM young_animals;
++----+--------+------------+---------------------+----------+----------------+
+| Id | Name   | Birthday   | Commands            | Genus_id | Age_in_monthss |
++----+--------+------------+---------------------+----------+----------------+
+|  4 | Marka  | 2020-11-10 | go, stop, jump      |        1 |             32 |
+|  3 | Gordy  | 2021-07-12 | GO                  |        2 |             24 |
+|  2 | Sucha  | 2022-06-12 | sidet, lezhat, lapu |        2 |             13 |
+|  1 | First  | 2020-10-12 |                     |        3 |             33 |
+|  2 | Second | 2021-03-12 | fight               |        3 |             28 |
+|  3 | Thirt  | 2022-07-11 | NULL                |        3 |             12 |
+|  4 | Null   | 2022-05-10 | NULL                |        3 |             14 |
++----+--------+------------+---------------------+----------+----------------+
+```
 12. Объединить все таблицы в одну, при этом сохраняя поля, указывающие на прошлую принадлежность к старым таблицам.
-13. Создать класс с Инкапсуляцией методов и наследованием по диаграмме.
+```sql
+SELECT h.Name, h.Birthday, h.Commands, pa.Genus_name
+FROM horses h
+LEFT JOIN young_animals ya ON ya.Name = h.Name
+LEFT JOIN pack_animals pa ON pa.Id = h.Genus_id
+UNION 
+SELECT d.Name, d.Birthday, d.Commands, pa.Genus_name
+FROM donkeys d 
+LEFT JOIN young_animals ya ON ya.Name = d.Name
+LEFT JOIN pack_animals pa ON pa.Id = d.Genus_id
+UNION
+SELECT c.Name, c.Birthday, c.Commands, ha.Genus_name
+FROM cats c
+LEFT JOIN young_animals ya ON ya.Name = c.Name
+LEFT JOIN pets ha ON ha.Id = c.Genus_id
+UNION
+SELECT d.Name, d.Birthday, d.Commands, ha.Genus_name
+FROM dogs d
+LEFT JOIN young_animals ya ON ya.Name = d.Name
+LEFT JOIN pets ha ON ha.Id = d.Genus_id
+UNION
+SELECT hm.Name, hm.Birthday, hm.Commands, ha.Genus_name
+FROM hamsters hm
+LEFT JOIN young_animals ya ON ya.Name = hm.Name
+LEFT JOIN pets ha ON ha.Id = hm.Genus_id;
++---------+------------+--------------------------------+------------+
+| Name    | Birthday   | Commands                       | Genus_name |
++---------+------------+--------------------------------+------------+
+| Kapusta | 2020-01-12 | go                             | Horses     |
+| Mouse   | 2017-03-12 | go, stop, jump                 | Horses     |
+| Aurus   | 2016-07-12 | go, stop, jump, none           | Horses     |
+| Marka   | 2020-11-10 | go, stop, jump                 | Horses     |
+| Silny   | 2019-04-10 | GO                             | Donkeys    |
+| Smely   | 2020-03-12 | GO                             | Donkeys    |
+| Gordy   | 2021-07-12 | GO                             | Donkeys    |
+| Spely   | 2022-12-10 | GO                             | Donkeys    |
+| Kaktus  | 2011-01-01 | ks-ks-ks                       | Cats       |
+| Tapok   | 2016-01-01 | foo                            | Cats       |
+| Shnyr   | 2017-01-01 | go                             | Cats       |
+| Layka   | 2020-01-01 | ko mne, lezhat, lapu, golos    | Dogs       |
+| Sucha   | 2022-06-12 | sidet, lezhat, lapu            | Dogs       |
+| New     | 2019-03-01 | sidet, lezhat, lapu, sled, fas | Dogs       |
+| Zuza    | 2020-05-10 | sidet, lezhat, foo, mesto      | Dogs       |
+| First   | 2020-10-12 |                                | Hamsters   |
+| Second  | 2021-03-12 | fight                          | Hamsters   |
+| Thirt   | 2022-07-11 | NULL                           | Hamsters   |
+| Null    | 2022-05-10 | NULL                           | Hamsters   |
++---------+------------+--------------------------------+------------+
+```
 
 ### Часть 4. Написание программы на языке Java
+13. Создать класс с Инкапсуляцией методов и наследованием по диаграмме.
 14. Написать программу, имитирующую работу реестра домашних животных.
 В программе должен быть реализован следующий функционал:\
 14.1. Завести новое животное\

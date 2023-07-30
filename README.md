@@ -646,6 +646,152 @@ LEFT JOIN pets ha ON ha.Id = hm.Genus_id;
 
 ### Часть 4. Написание программы на языке Java
 13. Создать класс с Инкапсуляцией методов и наследованием по диаграмме.
+* Создаем родительский класс __*Animal*__
+```java
+import java.util.ArrayList;
+
+public abstract class Animal {
+    private String name;
+    private String birthday;
+    private ArrayList<String> commands;
+
+    public Animal(String name, String birthday, 
+    ArrayList<String> commands) {
+        this.name = name;
+        this.birthday = birthday;
+        this.commands = commands;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public ArrayList<String> getCommands() {
+        return commands;
+    }
+
+    public void setCommands(ArrayList<String> commands) {
+        this.commands = commands;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        } else if (this.getClass() != obj.getClass()) {
+            return false;
+        } else return this.getName().equals(((Animal) obj).getName());
+    }
+}
+```
+* От класса __*Animal*__ наследуем класс __*Pet*__
+```java
+import java.util.ArrayList;
+
+public class Pet extends Animal {
+
+    public Pet(String name, String birthday, ArrayList<String> commands) {
+        super(name, birthday, commands);
+    }
+    
+}
+```
+* От класса __*Animal*__ наследуем класс __*PackAnimal*__
+```java
+import java.util.ArrayList;
+
+public class PackAnimal extends Animal {
+
+    public PackAnimal(String name, String birthday, ArrayList<String> commands) {
+        super(name, birthday, commands);
+    }
+    
+}
+```
+* От класса __*Pet*__ наследуем класс __*Cat*__
+```java
+import java.util.ArrayList;
+
+public class Cat extends Pet {
+
+    public Cat(String name, String birthday, ArrayList<String> commands) {
+        super(name, birthday, commands);
+    }
+    
+}
+```
+* От класса __*Pet*__ наследуем класс __*Dog*__
+```java
+import java.util.ArrayList;
+
+public class Dog extends Pet {
+
+    public Dog(String name, String birthday, ArrayList<String> commands) {
+        super(name, birthday, commands);
+    }
+    
+}
+```
+* От класса __*Pet*__ наследуем класс __*Dog*__
+```java
+import java.util.ArrayList;
+
+public class Hamster extends Pet{
+
+    public Hamster(String name, String birthday, ArrayList<String> commands) {
+        super(name, birthday, commands);
+    }
+    
+}
+```
+* От класса __*PackAnimal*__ наследуем класс __*Horse*__
+```java
+import java.util.ArrayList;
+
+public class Horse extends PackAnimal{
+
+    public Horse(String name, String birthday, ArrayList<String> commands) {
+        super(name, birthday, commands);
+    }
+    
+}
+```
+* От класса __*PackAnimal*__ наследуем класс __*Camel*__
+```java
+import java.util.ArrayList;
+
+public class Camel extends PackAnimal {
+
+    public Camel(String name, String birthday, ArrayList<String> commands) {
+        super(name, birthday, commands);
+    }
+    
+}
+```
+* От класса __*PackAnimal*__ наследуем класс __*Donkey*__
+```java
+import java.util.ArrayList;
+
+public class Donkey extends PackAnimal{
+
+    public Donkey(String name, String birthday, ArrayList<String> commands) {
+        super(name, birthday, commands);
+    }
+    
+}
+```
 14. Написать программу, имитирующую работу реестра домашних животных.
 В программе должен быть реализован следующий функционал:\
 14.1. Завести новое животное\
@@ -653,10 +799,11 @@ LEFT JOIN pets ha ON ha.Id = hm.Genus_id;
 14.3. увидеть список команд, которое выполняет животное\
 14.4. обучить животное новым командам\
 14.5. Реализовать навигацию по меню\
+
 15. Создайте класс Счетчик, у которого есть метод add(), увеличивающий̆ значение внутренней̆ int переменной̆ на 1 при нажатие “Завести новое животное” Сделайте так, чтобы с объектом такого типа можно было работать в блоке try-with-resources. Нужно бросить исключение, если работа с объектом типа счетчик была не в ресурсном try и/или ресурс остался открыт. Значение
 считать в ресурсе try, если при заведения животного заполнены все поля.
 
-
+__*[Решение заданий часть 14 и 15 по ссылке](Diagram\DiagramAnimals.drawio)*__
 
 
 

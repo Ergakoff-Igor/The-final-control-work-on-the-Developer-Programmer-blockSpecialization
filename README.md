@@ -234,9 +234,9 @@ sudo dpkg -r mysql-apt-config
 
 Для решения задания используем инструмент __*draw io*__
 
-![Diagram Animal Screen](Diagram\DiagramAnimals.png)
+![Diagram Animal Screen](https://github.com/Ergakoff-Igor/The-final-control-work-on-the-Developer-Programmer-blockSpecialization/blob/main/Diagram/DiagramAnimals.png?raw=true)
 
-__*[Файл .dravio](Diagram\DiagramAnimals.drawio)*__
+__*[Файл .dravio](https://github.com/Ergakoff-Igor/The-final-control-work-on-the-Developer-Programmer-blockSpecialization/blob/main/Diagram/DiagramAnimals.drawio)*__
 
 ### Часть 3. Работа с MySQL
 7. В подключенном MySQL репозитории создать базу данных “Друзья
@@ -803,7 +803,7 @@ public class Donkey extends PackAnimal{
 15. Создайте класс Счетчик, у которого есть метод add(), увеличивающий̆ значение внутренней̆ int переменной̆ на 1 при нажатие “Завести новое животное” Сделайте так, чтобы с объектом такого типа можно было работать в блоке try-with-resources. Нужно бросить исключение, если работа с объектом типа счетчик была не в ресурсном try и/или ресурс остался открыт. Значение
 считать в ресурсе try, если при заведения животного заполнены все поля.
 
-__*[Решение заданий часть 14 и 15 по ссылке](Diagram\DiagramAnimals.drawio)*__
+__*[Решение заданий часть 14 и 15 по ссылке](https://github.com/Ergakoff-Igor/The-final-control-work-on-the-Developer-Programmer-blockSpecialization/tree/main/AnimalLog/src)*__
 
 
 
